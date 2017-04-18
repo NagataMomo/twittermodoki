@@ -1,0 +1,32 @@
+{% extends "polls/base.html" %}
+{% block content %}
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<!--  authenticationsでloginしていないときでも上手くいくようにしてる。-->
+{% if user.is_authenticated %}
+<form action="{% url 'polls:add' %}" method="post">
+  <!--  addに以下のデータを転送してる-->
+ {% csrf_token %}
+ <input type="text" name="text"  />
+ <input type="submit" value="tweet" />
+
+</form>
+
+{% endif %}
+<h1>timeline</h1>
+<!--  forでtweetｓの中身をかきだしている。-->
+{% for tweet in tweets %}
+
+{{ tweet.user.username }}
+{{ tweet.tweet_text }}
+
+
+<form action="{% url 'polls:delete' %}" method="post">
+  {% csrf_token %}
+  <input type="hidden" name="tweet_id"  value="{{tweet.id}}"/>
+  <input type="submit" value="削除" />
+</form>
+
+
+{% endfor %}
+
+{% endblock %}
